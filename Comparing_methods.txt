@@ -1,0 +1,158 @@
+(1) K nearest neighbours (KNN)
+(2) Naive_bayes - GaussianNB
+(3) discriminant_analysis - linear discriminant analysis
+(4) Gaussian Process
+(5) Logistic Regression
+(6) LinearSVC, SVC
+(7) Decision Tree
+(8) Random Forest
+(9) Gradient Boosting 
+(10) Neural Network - MLP
+(11) Neural Network - CNN
+
+Feature type:
+(1) raw feature
+(2) PCA feature
+(3) 3D-DWT feature
+(4) 3D-Garbor feature
+
+
+
+DATA_PATH = os.path.join(os.getcwd(),"datasets")
+TrainIndex = scipy.io.loadmat(os.path.join(DATA_PATH, 'TrainIndex.mat'))['TrainIndex']
+TestIndex = scipy.io.loadmat(os.path.join(DATA_PATH, 'TestIndex.mat'))['TestIndex']
+string = 'indian_pines'
+Data = scipy.io.loadmat(os.path.join(DATA_PATH, string+'.mat'))[string]
+Label = scipy.io.loadmat(os.path.join(DATA_PATH, string+'_gt.mat'))[string+'_gt']
+Data = Data.astype(float)
+height,width,band = Data.shape[0], Data.shape[1], Data.shape[2]
+X = Data.transpose(2,0,1).transpose(0,2,1).reshape(band,-1).transpose(1,0)
+y = Label.transpose(1,0).reshape((-1,))
+TrainIndex = TrainIndex[0] - 1
+TestIndex = TestIndex[0] - 1
+X_train = X[TrainIndex]
+X_test = X[TestIndex]
+y_train = y[TrainIndex]
+y_test = y[TestIndex]
+
+
+
+#from sklearn.svm import SVC
+#grid_values = {'gamma': [0.001, 0.01, 0.1, 1],'C':[1,10,100,200]}
+#SVM = SVC()
+#grid_svm_acc = GridSearchCV(SVM, param_grid = grid_values)
+#grid_svm_acc.fit(X_train_scaled, y_train)
+#print('Grid best parameter (max. accuracy): ', grid_svm_acc.best_params_)
+#print('Grid best score (accuracy): ', grid_svm_acc.best_score_)
+#print('(SVM) Accuracy = %.3f' % grid_svm_acc.score(X_test_scaled,y_test))
+
+
+
+
+
+# Indian Pines Results (5% each class):
+(1) Raw feature
+--------------------------------------------------------------------
+(KNN) 			Train Accuracy=0.744, Test Accuracy=0.620 (Time_cost=6.705)
+--------------------------------------------------------------------
+(GaussNB) 		Train Accuracy=0.548, Test Accuracy=0.479 (Time_cost=1.753)
+--------------------------------------------------------------------
+(LDA) 			Train Accuracy=0.987, Test Accuracy=0.659 (Time_cost=0.167)
+--------------------------------------------------------------------
+(LR) 			Train Accuracy=0.890, Test Accuracy=0.650 (Time_cost=0.802)
+--------------------------------------------------------------------
+(Linear SVM) 		Train Accuracy=0.921, Test Accuracy=0.668 (Time_cost=3.289)
+--------------------------------------------------------------------
+(Kernel SVM) 		Train Accuracy=0.942, Test Accuracy=0.693 (Time_cost=4.560)
+--------------------------------------------------------------------
+(Decision Tree) 	Train Accuracy=1.000, Test Accuracy=0.533 (Time_cost=0.300)
+--------------------------------------------------------------------
+(Random Forest) 	Train Accuracy=1.000, Test Accuracy=0.676 (Time_cost=5.272)
+--------------------------------------------------------------------
+(Gradient Boosting) 	Train Accuracy=1.000, Test Accuracy=0.652 (Time_cost=68.722)
+--------------------------------------------------------------------
+(MLP) 			Train Accuracy=0.808, Test Accuracy=0.647 (Time_cost=14.246)
+--------------------------------------------------------------------
+
+(2) PCA (dim=20)
+--------------------------------------------------------------------
+(KNN) 			Train Accuracy=0.679, Test Accuracy=0.561 (Time_cost=0.885)
+--------------------------------------------------------------------
+(GaussNB) 		Train Accuracy=0.658, Test Accuracy=0.560 (Time_cost=0.196)
+--------------------------------------------------------------------
+(LDA) 			Train Accuracy=0.667, Test Accuracy=0.570 (Time_cost=0.035)
+--------------------------------------------------------------------
+(LR) 			Train Accuracy=0.733, Test Accuracy=0.603 (Time_cost=0.275)
+--------------------------------------------------------------------
+(Linear SVM) 		Train Accuracy=0.671, Test Accuracy=0.585 (Time_cost=0.151)
+--------------------------------------------------------------------
+(Kernel SVM) 		Train Accuracy=0.837, Test Accuracy=0.669 (Time_cost=0.834)
+--------------------------------------------------------------------
+(Decision Tree) 	Train Accuracy=1.000, Test Accuracy=0.553 (Time_cost=0.039)
+--------------------------------------------------------------------
+(Random Forest) 	Train Accuracy=1.000, Test Accuracy=0.677 (Time_cost=3.537)
+--------------------------------------------------------------------
+(Gradient Boosting) 	Train Accuracy=1.000, Test Accuracy=0.643 (Time_cost=19.300)
+--------------------------------------------------------------------
+(MLP) 			Train Accuracy=0.827, Test Accuracy=0.644 (Time_cost=25.446)
+--------------------------------------------------------------------
+
+(3) 3DDWT
+----------------------------------
+(KNN) 			Train Accuracy=1.000, Test Accuracy=0.805 (Time_cost=36.859)
+--------------------------------------------------------------------
+(GaussNB) 		Train Accuracy=0.490, Test Accuracy=0.436 (Time_cost=19.649)
+--------------------------------------------------------------------
+(LDA) 			Train Accuracy=0.990, Test Accuracy=0.796 (Time_cost=1.455)
+--------------------------------------------------------------------
+(LR) 			Train Accuracy=0.942, Test Accuracy=0.825 (Time_cost=15.689)
+--------------------------------------------------------------------
+(Linear SVM) 		Train Accuracy=1.000, Test Accuracy=0.838 (Time_cost=48.070)
+--------------------------------------------------------------------
+(Kernel SVM) 		Train Accuracy=1.000, Test Accuracy=0.828 (Time_cost=60.205)
+--------------------------------------------------------------------
+(Decision Tree) 	Train Accuracy=1.000, Test Accuracy=0.690 (Time_cost=4.838)
+--------------------------------------------------------------------
+(Random Forest) 	Train Accuracy=1.000, Test Accuracy=0.776 (Time_cost=13.781)
+--------------------------------------------------------------------
+(Gradient Boosting) 	Train Accuracy=1.000, Test Accuracy=0.753 (Time_cost=701.837)
+--------------------------------------------------------------------
+(MLP) 			Train Accuracy=0.688, Test Accuracy=0.611 (Time_cost=81.832)
+--------------------------------------------------------------------
+
+(4) 3D-Gabor (single 44)
+----------------------------------
+(KNN) 			Train Accuracy=1.000, Test Accuracy=0.724 (Time_cost=2.114)
+--------------------------------------------------------------------
+(GaussNB) 		Train Accuracy=0.485, Test Accuracy=0.437 (Time_cost=1.891)
+--------------------------------------------------------------------
+(LDA) 			Train Accuracy=0.998, Test Accuracy=0.866 (Time_cost=0.218)
+--------------------------------------------------------------------
+(LR) 			Train Accuracy=0.887, Test Accuracy=0.798 (Time_cost=2.542)
+--------------------------------------------------------------------
+(Linear SVM) 		Train Accuracy=0.813, Test Accuracy=0.771 (Time_cost=4.097)
+--------------------------------------------------------------------
+(Kernel SVM) 		Train Accuracy=0.933, Test Accuracy=0.855 (Time_cost=3.499)
+--------------------------------------------------------------------
+(Decision Tree) 	Train Accuracy=1.000, Test Accuracy=0.626 (Time_cost=0.366)
+--------------------------------------------------------------------
+(Random Forest) 	Train Accuracy=1.000, Test Accuracy=0.738 (Time_cost=5.780)
+--------------------------------------------------------------------
+(Gradient Boosting) 	Train Accuracy=1.000, Test Accuracy=0.712 (Time_cost=81.758)
+--------------------------------------------------------------------
+(MLP) 			Train Accuracy=0.581, Test Accuracy=0.545 (Time_cost=23.774)
+--------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
