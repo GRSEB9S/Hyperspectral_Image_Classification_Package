@@ -13,7 +13,7 @@ import time
 
 ## Load data
 data_all, label_all, X, y, height, width, num_classes, GT_Label,ind,ind_each_class = \
-            load_data('indian_pines',feature_type='raw',ispca=False)
+            load_data('paviaU',feature_type='raw',ispca=False)
             
 
 
@@ -31,8 +31,8 @@ train_indexes = train_indexes.astype(int)
 test_indexes = test_indexes.astype(int)
 train_map[train_indexes] = label_all[train_indexes]
 test_map[test_indexes] = label_all[test_indexes]
-train_map = train_map.reshape(GT_Label.shape[0],GT_Label.shape[1]).transpose(1,0).astype(int)
-test_map  = test_map.reshape(GT_Label.shape[0],GT_Label.shape[1]).transpose(1,0).astype(int)
+train_map = train_map.reshape(GT_Label.shape[1],GT_Label.shape[0]).transpose(1,0).astype(int)
+test_map  = test_map.reshape(GT_Label.shape[1],GT_Label.shape[0]).transpose(1,0).astype(int)
 
 ## Data Summary
 df = data_summary(y_train,y,num_classes)
@@ -56,7 +56,7 @@ data_all_scaled = scaler.transform(data_all)
 from sklearn.neighbors import KNeighborsClassifier
 start_time = time.time()
 KNN = KNeighborsClassifier(n_neighbors=7).fit(X_train_scaled,y_train)
-KNN_Label = KNN.predict(data_all_scaled).reshape(height,width).astype(int).transpose(1,0)
+KNN_Label = KNN.predict(data_all_scaled).reshape(width,height).astype(int).transpose(1,0)
 KNN_predict_prob = KNN.predict_proba(data_all_scaled)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(KNN_predict_prob,height,width,\
@@ -72,7 +72,7 @@ print('--------------------------------------------------------------------')
 from sklearn.naive_bayes import GaussianNB
 start_time = time.time()
 GaussNB = GaussianNB().fit(X_train,y_train)
-GaussNB_Label = GaussNB.predict(data_all).reshape(height,width).astype(int).transpose(1,0)
+GaussNB_Label = GaussNB.predict(data_all).reshape(width,height).astype(int).transpose(1,0)
 GaussNB_predict_prob = GaussNB.predict_proba(data_all)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(GaussNB_predict_prob,height,width,\
@@ -88,7 +88,7 @@ print('--------------------------------------------------------------------')
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 start_time = time.time()
 LDA = LinearDiscriminantAnalysis().fit(X_train,y_train)
-LDA_Label = LDA.predict(data_all).reshape(height,width).astype(int).transpose(1,0)
+LDA_Label = LDA.predict(data_all).reshape(width,height).astype(int).transpose(1,0)
 LDA_predict_prob = LDA.predict_proba(data_all)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(LDA_predict_prob,height,width,\
@@ -104,7 +104,7 @@ print('--------------------------------------------------------------------')
 from sklearn.linear_model import LogisticRegression
 start_time = time.time()
 LR = LogisticRegression(multi_class='multinomial',solver='lbfgs',C=10).fit(X_train_scaled,y_train)
-LR_Label = LR.predict(data_all_scaled).reshape(height,width).astype(int).transpose(1,0)
+LR_Label = LR.predict(data_all_scaled).reshape(width,height).astype(int).transpose(1,0)
 LR_predict_prob = LR.predict_proba(data_all_scaled)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(LR_predict_prob,height,width,\
@@ -120,7 +120,7 @@ print('--------------------------------------------------------------------')
 from sklearn.svm import LinearSVC
 start_time = time.time()
 LSVM = LinearSVC(multi_class='ovr').fit(X_train_scaled,y_train)
-LSVM_Label = LSVM.predict(data_all_scaled).reshape(height,width).astype(int).transpose(1,0)
+LSVM_Label = LSVM.predict(data_all_scaled).reshape(width,height).astype(int).transpose(1,0)
 print('(Linear SVM) Train Acc=%.3f, Cla_Acc==%.3f (Time_cost=%.3f)'\
       % (LSVM.score(X_train_scaled,y_train),LSVM.score(X_test_scaled,y_test),\
          (time.time()-start_time)))
@@ -132,7 +132,7 @@ print('--------------------------------------------------------------------')
 from sklearn.svm import SVC
 start_time = time.time()
 SVM = SVC(C=200,probability=True).fit(X_train_scaled, y_train)
-SVM_Label = SVM.predict(data_all_scaled).reshape(height,width).astype(int).transpose(1,0)
+SVM_Label = SVM.predict(data_all_scaled).reshape(width,height).astype(int).transpose(1,0)
 SVM_predict_prob = SVM.predict_proba(data_all_scaled)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(SVM_predict_prob,height,width,\
@@ -148,7 +148,7 @@ print('--------------------------------------------------------------------')
 from sklearn.tree import DecisionTreeClassifier
 start_time = time.time()
 DTree = DecisionTreeClassifier(max_depth=50).fit(X_train,y_train)
-DTree_Label = DTree.predict(data_all).reshape(height,width).astype(int).transpose(1,0)
+DTree_Label = DTree.predict(data_all).reshape(width,height).astype(int).transpose(1,0)
 DTree_predict_prob = DTree.predict_proba(data_all)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(DTree_predict_prob,height,width,\
@@ -164,7 +164,7 @@ print('--------------------------------------------------------------------')
 from sklearn.ensemble import RandomForestClassifier
 start_time = time.time()
 RF = RandomForestClassifier(n_estimators=200).fit(X_train,y_train)
-RF_Label = RF.predict(data_all).reshape(height,width).astype(int).transpose(1,0)
+RF_Label = RF.predict(data_all).reshape(width,height).astype(int).transpose(1,0)
 RF_predict_prob = RF.predict_proba(data_all)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(RF_predict_prob,height,width,\
@@ -180,7 +180,7 @@ print('--------------------------------------------------------------------')
 from sklearn.ensemble import GradientBoostingClassifier
 start_time = time.time()
 GBC = GradientBoostingClassifier(n_estimators=300,learning_rate=0.1).fit(X_train,y_train)
-GBC_Label = GBC.predict(data_all).reshape(height,width).astype(int).transpose(1,0)
+GBC_Label = GBC.predict(data_all).reshape(width,height).astype(int).transpose(1,0)
 GBC_predict_prob = GBC.predict_proba(data_all)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(GBC_predict_prob,height,width,\
@@ -196,7 +196,7 @@ print('--------------------------------------------------------------------')
 from sklearn.neural_network import MLPClassifier
 start_time = time.time()
 MLP = MLPClassifier(hidden_layer_sizes=[200,350]).fit(X_train_scaled,y_train)
-MLP_Label = MLP.predict(data_all_scaled).reshape(height,width).astype(int).transpose(1,0)
+MLP_Label = MLP.predict(data_all_scaled).reshape(width,height).astype(int).transpose(1,0)
 MLP_predict_prob = MLP.predict_proba(data_all_scaled)
 # Post-processing using Graph-Cut
 Seg_Label, seg_accuracy = Post_Processing(MLP_predict_prob,height,width,\
@@ -207,5 +207,4 @@ print('(MLP) Train_Acc=%.3f, Cla_Acc=%.3f, Seg_Acc=%.3f(Time_cost=%.3f)'\
 # draw classification map
 draw(GT_Label,MLP_Label,Seg_Label,train_map,test_map)
 print('--------------------------------------------------------------------')
-
 

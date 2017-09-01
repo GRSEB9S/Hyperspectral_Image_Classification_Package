@@ -65,7 +65,7 @@ def load_data(string,feature_type='raw',ispca=False):
     
     # dimension reduction using PCA
     if ispca:
-        pca = PCA(n_components=20)
+        pca = PCA(n_components=40)
         data_all = pca.fit_transform(data_all)
     # remove the sepctral vectors whose labels are 0
     data = data_all[label_all!=0]
@@ -266,8 +266,8 @@ def unaries_reshape(unaries,height,width,num_classes):
     return np.dstack(una).copy("C")
 
 def Post_Processing(prob_map,height,width,num_classes,y_test,test_indexes):
-    unaries = (-10*np.log(prob_map+1e-4)).astype(np.int32)
-    una = unaries_reshape(unaries,height,width,num_classes)
+    unaries = (-100*np.log(prob_map+1e-4)).astype(np.int32)
+    una = unaries_reshape(unaries,width,height,num_classes)
     one_d_topology = (np.ones(num_classes)-np.eye(num_classes)).astype(np.int32).copy("C")
     Seg_Label = cut_simple(una, 50 * one_d_topology)
     Seg_Label = Seg_Label + 1
